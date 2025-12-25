@@ -68,7 +68,7 @@ Different types of glass are used for various purposes such as windows, containe
 2. **Enter chemical properties** using sliders OR click sample buttons
 3. **Click "CLASSIFY GLASS TYPE"** to get predictions
 
-## 🔧 Technologies Used
+##  Technologies Used
 
 - **Python 3.8+**
 - **NumPy** - Numerical computing
@@ -81,11 +81,8 @@ Different types of glass are used for various purposes such as windows, containe
 
 
 
-## 🙏 Acknowledgments
+##  Acknowledgments
 
 - UCI Machine Learning Repository for the Glass Identification Dataset
 - Scikit-learn documentation and community
 
----
-
-⭐ **If you found this project helpful, please give it a star!** ⭐
