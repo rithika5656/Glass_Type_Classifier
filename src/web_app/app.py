@@ -12,7 +12,8 @@ from glass_classifier import config, predict, data_loader, visualization, train
 st.set_page_config(page_title="Glass Type Classifier", layout="wide")
 
 st.title("🔬 Glass Type Classifier")
-st.markdown("Classify glass based on chemical composition using KNN and SVM.")
+st.markdown("Classify glass based on chemical composition using KNN, SVM, Random Forest, and Gradient Boosting.")
+
 
 # Sidebar for navigation
 page = st.sidebar.selectbox("Choose a page", ["Prediction", "Data Analysis", "Model Training"])
@@ -21,12 +22,13 @@ if page == "Prediction":
     st.header("🔮 Make a Prediction")
     
     # Check if models exist
-    knn, svm, scaler = predict.load_models()
+    knn, svm, rf, gb, scaler = predict.load_models()
     
     if knn is None:
         st.warning("Models not trained yet. Go to 'Model Training' page first.")
     else:
-        models_dict = {'knn': knn, 'svm': svm, 'scaler': scaler}
+        models_dict = {'knn': knn, 'svm': svm, 'rf': rf, 'gb': gb, 'scaler': scaler}
+
         
         st.subheader("Enter Chemical Properties:")
         
@@ -62,13 +64,20 @@ if page == "Prediction":
             
             st.success("Prediction Complete!")
             
-            p1, p2 = st.columns(2)
+            p1, p2, p3, p4 = st.columns(4)
             with p1:
-                st.info(f"**KNN Prediction:** Type {preds['KNN']}")
-                st.write(f"Description: **{data_loader.get_class_name(preds['KNN'])}**")
+                st.info(f"**KNN:** Type {preds['KNN']}")
+                st.caption(data_loader.get_class_name(preds['KNN']))
             with p2:
-                st.info(f"**SVM Prediction:** Type {preds['SVM']}")
-                st.write(f"Description: **{data_loader.get_class_name(preds['SVM'])}**")
+                st.info(f"**SVM:** Type {preds['SVM']}")
+                st.caption(data_loader.get_class_name(preds['SVM']))
+            with p3:
+                st.info(f"**RF:** Type {preds['Random Forest']}")
+                st.caption(data_loader.get_class_name(preds['Random Forest']))
+            with p4:
+                st.info(f"**GB:** Type {preds['Gradient Boosting']}")
+                st.caption(data_loader.get_class_name(preds['Gradient Boosting']))
+
 
 elif page == "Data Analysis":
     st.header("📊 Data Analysis")
@@ -105,16 +114,41 @@ elif page == "Model Training":
                 from glass_classifier import evaluate
                 knn_eval = evaluate.evaluate_model(artifacts['knn'], artifacts['X_test_scaled'], artifacts['y_test'], "KNN")
                 svm_eval = evaluate.evaluate_model(artifacts['svm'], artifacts['X_test_scaled'], artifacts['y_test'], "SVM")
+                rf_eval = evaluate.evaluate_model(artifacts['rf'], artifacts['X_test_scaled'], artifacts['y_test'], "Random Forest")
+                gb_eval = evaluate.evaluate_model(artifacts['gb'], artifacts['X_test_scaled'], artifacts['y_test'], "Gradient Boosting")
                 
+                st.subheader("Model Performance")
                 c1, c2 = st.columns(2)
                 with c1:
-                    st.write("### KNN Results")
-                    st.write(f"Accuracy: {knn_eval['accuracy']:.4f}")
-                    st.pyplot(visualization.plot_confusion_matrix(knn_eval['confusion_matrix'], "KNN"))
+                    st.write("### Accuracy Scores")
+                    metrics_df = pd.DataFrame({
+                        'Model': ['KNN', 'SVM', 'Random Forest', 'Gradient Boosting'],
+                        'Accuracy': [
+                            knn_eval['accuracy'], 
+                            svm_eval['accuracy'],
+                            rf_eval['accuracy'],
+                            gb_eval['accuracy']
+                        ]
+                    })
+                    st.dataframe(metrics_df)
+                    
                 with c2:
-                    st.write("### SVM Results")
-                    st.write(f"Accuracy: {svm_eval['accuracy']:.4f}")
+                    st.write("### Feature Importance (Random Forest)")
+                    fig_imp = visualization.plot_feature_importance(artifacts['rf'], config.FEATURE_COLUMNS)
+                    if fig_imp:
+                        st.pyplot(fig_imp)
+
+                st.subheader("Confusion Matrices")
+                cm1, cm2, cm3, cm4 = st.columns(4)
+                with cm1:
+                    st.pyplot(visualization.plot_confusion_matrix(knn_eval['confusion_matrix'], "KNN"))
+                with cm2:
                     st.pyplot(visualization.plot_confusion_matrix(svm_eval['confusion_matrix'], "SVM"))
+                with cm3:
+                    st.pyplot(visualization.plot_confusion_matrix(rf_eval['confusion_matrix'], "RF"))
+                with cm4:
+                    st.pyplot(visualization.plot_confusion_matrix(gb_eval['confusion_matrix'], "GB"))
+
                     
             except Exception as e:
                 st.error(f"Training failed: {e}")
