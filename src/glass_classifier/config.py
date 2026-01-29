@@ -1,4 +1,6 @@
 import os
+import logging
+
 
 # Paths
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
@@ -25,3 +27,10 @@ RANDOM_STATE = 42
 TEST_SIZE = 0.2
 KNN_N_NEIGHBORS = 3
 SVM_KERNEL = 'rbf'
+RF_N_ESTIMATORS = 100
+GB_LEARNING_RATE = 0.1
+GB_N_ESTIMATORS = 100
+
+# Logging
+LOG_FORMAT = '%(asctime)s - %(name)s - %(levelname)s - %(message)s'
+LOG_LEVEL = logging.INFO
