@@ -22,12 +22,13 @@ if page == "Prediction":
     st.header("🔮 Make a Prediction")
     
     # Check if models exist
-    knn, svm, rf, gb, scaler = predict.load_models()
+    knn, svm, rf, gb, lr, scaler = predict.load_models()
     
     if knn is None:
         st.warning("Models not trained yet. Go to 'Model Training' page first.")
     else:
-        models_dict = {'knn': knn, 'svm': svm, 'rf': rf, 'gb': gb, 'scaler': scaler}
+        models_dict = {'knn': knn, 'svm': svm, 'rf': rf, 'gb': gb, 'lr': lr, 'scaler': scaler}
+
 
         
         st.subheader("Enter Chemical Properties:")
@@ -77,6 +78,10 @@ if page == "Prediction":
             with p4:
                 st.info(f"**GB:** Type {preds['Gradient Boosting']}")
                 st.caption(data_loader.get_class_name(preds['Gradient Boosting']))
+            
+            st.info(f"**LR:** Type {preds['Logistic Regression']}")
+            st.caption(data_loader.get_class_name(preds['Logistic Regression']))
+
 
 
 elif page == "Data Analysis":
@@ -116,20 +121,23 @@ elif page == "Model Training":
                 svm_eval = evaluate.evaluate_model(artifacts['svm'], artifacts['X_test_scaled'], artifacts['y_test'], "SVM")
                 rf_eval = evaluate.evaluate_model(artifacts['rf'], artifacts['X_test_scaled'], artifacts['y_test'], "Random Forest")
                 gb_eval = evaluate.evaluate_model(artifacts['gb'], artifacts['X_test_scaled'], artifacts['y_test'], "Gradient Boosting")
+                lr_eval = evaluate.evaluate_model(artifacts['lr'], artifacts['X_test_scaled'], artifacts['y_test'], "Logistic Regression")
                 
                 st.subheader("Model Performance")
                 c1, c2 = st.columns(2)
                 with c1:
                     st.write("### Accuracy Scores")
                     metrics_df = pd.DataFrame({
-                        'Model': ['KNN', 'SVM', 'Random Forest', 'Gradient Boosting'],
+                        'Model': ['KNN', 'SVM', 'Random Forest', 'Gradient Boosting', 'Logistic Regression'],
                         'Accuracy': [
                             knn_eval['accuracy'], 
                             svm_eval['accuracy'],
                             rf_eval['accuracy'],
-                            gb_eval['accuracy']
+                            gb_eval['accuracy'],
+                            lr_eval['accuracy']
                         ]
                     })
+
                     st.dataframe(metrics_df)
                     
                 with c2:
