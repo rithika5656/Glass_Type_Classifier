@@ -29,3 +29,19 @@ def plot_confusion_matrix(cm, model_name="Model"):
     plt.xlabel('Predicted Label')
     plt.tight_layout()
     return plt
+
+def plot_feature_importance(model, feature_names):
+    """Plot feature importance for tree-based models."""
+    if not hasattr(model, 'feature_importances_'):
+        return None
+        
+    importances = model.feature_importances_
+    indices = importances.argsort()[::-1]
+    
+    plt.figure(figsize=(10, 6))
+    plt.title("Feature Importance")
+    plt.bar(range(len(importances)), importances[indices], align="center")
+    plt.xticks(range(len(importances)), [feature_names[i] for i in indices], rotation=45)
+    plt.tight_layout()
+    return plt
+
