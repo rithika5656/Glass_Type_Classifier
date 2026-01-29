@@ -46,13 +46,20 @@ def train_pipeline(save_models=True):
     logger.info("Training Gradient Boosting...")
     gb = models.create_gb_model()
     gb.fit(X_train_scaled, y_train)
+
+    # Train Logistic Regression
+    logger.info("Training Logistic Regression...")
+    lr = models.create_lr_model()
+    lr.fit(X_train_scaled, y_train)
     
     artifacts = {
         'knn': knn,
         'svm': svm,
         'rf': rf,
         'gb': gb,
+        'lr': lr,
         'scaler': scaler,
+
         'X_test_scaled': X_test_scaled,
         'y_test': y_test,
         'X_train_scaled': X_train_scaled,
@@ -62,8 +69,9 @@ def train_pipeline(save_models=True):
     if save_models:
         save_artifacts(artifacts)
         # Evaluate and save metrics
-        for name, model in [('knn', knn), ('svm', svm), ('rf', rf), ('gb', gb)]:
+        for name, model in [('knn', knn), ('svm', svm), ('rf', rf), ('gb', gb), ('lr', lr)]:
              metrics = evaluate.evaluate_model(model, X_test_scaled, y_test, name.upper())
+
              evaluate.save_metrics_to_json(metrics, os.path.join(config.MODEL_DIR, f'{name}_metrics.json'))
         
     return artifacts
@@ -77,6 +85,8 @@ def save_artifacts(artifacts):
     joblib.dump(artifacts['svm'], os.path.join(config.MODEL_DIR, 'svm_model.pkl'))
     joblib.dump(artifacts['rf'], os.path.join(config.MODEL_DIR, 'rf_model.pkl'))
     joblib.dump(artifacts['gb'], os.path.join(config.MODEL_DIR, 'gb_model.pkl'))
+    joblib.dump(artifacts['lr'], os.path.join(config.MODEL_DIR, 'lr_model.pkl'))
     joblib.dump(artifacts['scaler'], os.path.join(config.MODEL_DIR, 'scaler.pkl'))
     logger.info(f"Artifacts saved to {config.MODEL_DIR}")
+
 
