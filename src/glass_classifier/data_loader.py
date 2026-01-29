@@ -1,10 +1,24 @@
-import pandas as pd
-import os
 import logging
+import requests
 from . import config
 
 logging.basicConfig(level=config.LOG_LEVEL, format=config.LOG_FORMAT)
 logger = logging.getLogger(__name__)
+
+def download_dataset(url, dest):
+    """Download dataset from URL."""
+    try:
+        logger.info(f"Downloading data from {url}...")
+        response = requests.get(url)
+        response.raise_for_status()
+        with open(dest, 'wb') as f:
+            f.write(response.content)
+        logger.info("Download complete.")
+        return True
+    except Exception as e:
+        logger.error(f"Failed to download data: {e}")
+        return False
+
 
 def validate_schema(df):
     """Validate that the dataframe has the required columns."""
@@ -36,13 +50,15 @@ def load_data(filepath=None):
     logger.info(f"Loading data from {filepath}")
     
     if not os.path.exists(filepath):
-        logger.error(f"File not found at {filepath}")
-
-        # Try to look in current directory if config path fails (e.g. running from root)
-        if os.path.exists('glass.csv'):
-             filepath = 'glass.csv'
+        logger.warning(f"File not found at {filepath}. Attempting download...")
+        if download_dataset(config.DATA_URL, filepath):
+             # verify existence after download
+             if not os.path.exists(filepath):
+                  raise FileNotFoundError("Download appears successful but file is missing.")
         else:
-             raise FileNotFoundError(f"Dataset not found at {filepath}")
+             logger.error("Download failed.")
+             raise FileNotFoundError(f"Dataset not found at {filepath} and download failed.")
+
     
     # Check if header exists by peeking
     try:
