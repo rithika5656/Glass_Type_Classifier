@@ -2,7 +2,8 @@ from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import StandardScaler
 from . import config
 
-def split_data(df, target_col=None, test_size=None, random_state=None):
+def split_data(df, target_col=None, test_size=None, random_state=None, stratify=True):
+
     """
     Split data into features (X) and target (y), then train/test sets.
     
@@ -25,7 +26,9 @@ def split_data(df, target_col=None, test_size=None, random_state=None):
     X = df.drop(target_col, axis=1)
     y = df[target_col]
     
-    return train_test_split(X, y, test_size=test_size, random_state=random_state)
+    strat = y if stratify else None
+    return train_test_split(X, y, test_size=test_size, random_state=random_state, stratify=strat)
+
 
 def scale_features(X_train, X_test):
     """
