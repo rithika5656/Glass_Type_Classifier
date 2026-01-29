@@ -1,7 +1,9 @@
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.svm import SVC
 from sklearn.ensemble import RandomForestClassifier, GradientBoostingClassifier
+from sklearn.linear_model import LogisticRegression
 from typing import Any
+
 from . import config
 
 
@@ -38,4 +40,15 @@ def create_gb_model(learning_rate: float = None, n_estimators: int = None, rando
     if random_state is None:
         random_state = config.RANDOM_STATE
     return GradientBoostingClassifier(learning_rate=learning_rate, n_estimators=n_estimators, random_state=random_state)
+
+def create_lr_model(max_iter: int = None, C: float = None, random_state: int = None) -> LogisticRegression:
+    """Create Logistic Regression classifier."""
+    if max_iter is None:
+        max_iter = config.LR_MAX_ITER
+    if C is None:
+        C = config.LR_C
+    if random_state is None:
+        random_state = config.RANDOM_STATE
+    return LogisticRegression(max_iter=max_iter, C=C, random_state=random_state)
+
 
