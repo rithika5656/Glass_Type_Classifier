@@ -5,7 +5,9 @@ import logging
 # Paths
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 DATA_FILE = os.path.join(BASE_DIR, 'glass.csv')
+DATA_URL = "https://archive.ics.uci.edu/ml/machine-learning-databases/glass/glass.data"
 MODEL_DIR = os.path.join(BASE_DIR, 'models')
+
 
 # Data Column Names
 COLUMNS = ['RI', 'Na', 'Mg', 'Al', 'Si', 'K', 'Ca', 'Ba', 'Fe', 'Type']
@@ -30,7 +32,10 @@ SVM_KERNEL = 'rbf'
 RF_N_ESTIMATORS = 100
 GB_LEARNING_RATE = 0.1
 GB_N_ESTIMATORS = 100
+LR_MAX_ITER = 1000
+LR_C = 1.0
 
 # Logging
+
 LOG_FORMAT = '%(asctime)s - %(name)s - %(levelname)s - %(message)s'
 LOG_LEVEL = logging.INFO
