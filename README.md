@@ -26,7 +26,18 @@ This project has been significantly refactored from a simple notebook into a pro
 17. **Model Comparison**: Side-by-side display of KNN and SVM simple predictions.
 18. **CI/CD Ready**: Structure supports automation.
 19. **Code Quality**: Adherence to PEP 8 standards (variable naming, imports).
-20. **Extensibility**: Easy to add new models (RandomForest, XGBoost) in `models.py`.
+20. **Extensibility**: Easy to add new models.
+21. **Automated Data Download**: Automatically downloads UCI dataset if missing.
+22. **Robust Preprocessing**: Added outlier handling and RobustScaler support.
+23. **More Models**: Added Random Forest, Gradient Boosting, and Logistic Regression.
+24. **Feature Importance**: Visualized feature importance for tree-based models.
+25. **Evaluation Metrics**: Saves detailed metrics to JSON files.
+26. **Cross Validation**: Added cross-validation support.
+27. **Logging**: Integrated python logging for better debugging.
+28. **Reproducibility**: Global random seed setting.
+29. **System Info**: Utility to log system environment.
+30. **Unit Tests**: comprehensive unit tests for models and data loader.
+
 
 ## 📂 Project Structure
 
