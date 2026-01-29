@@ -1,6 +1,21 @@
 import pandas as pd
 import os
+import logging
 from . import config
+
+logging.basicConfig(level=config.LOG_LEVEL, format=config.LOG_FORMAT)
+logger = logging.getLogger(__name__)
+
+def validate_schema(df):
+    """Validate that the dataframe has the required columns."""
+    missing = [col for col in config.FEATURE_COLUMNS if col not in df.columns]
+    if missing:
+        raise ValueError(f"Missing columns: {missing}")
+    if config.TARGET_COLUMN not in df.columns:
+        # It's ok if target column is missing for prediction data, but here we assume mainly for training
+        logger.warning(f"Target column '{config.TARGET_COLUMN}' not found.")
+    return True
+
 
 def load_data(filepath=None):
     """
@@ -18,8 +33,11 @@ def load_data(filepath=None):
     if filepath is None:
         filepath = config.DATA_FILE
         
+    logger.info(f"Loading data from {filepath}")
+    
     if not os.path.exists(filepath):
-        print(f"File not found at {filepath}")
+        logger.error(f"File not found at {filepath}")
+
         # Try to look in current directory if config path fails (e.g. running from root)
         if os.path.exists('glass.csv'):
              filepath = 'glass.csv'
@@ -50,9 +68,14 @@ def load_data(filepath=None):
                  df.columns = config.COLUMNS
                  
     except Exception as e:
+        logger.error(f"Error loading data: {e}")
         raise OSError(f"Error loading data: {e}")
+    
+    validate_schema(df)
+    logger.info(f"Data loaded successfully with shape {df.shape}")
         
     return df
+
 
 def get_class_name(class_id):
     """Return the name of the glass type."""
