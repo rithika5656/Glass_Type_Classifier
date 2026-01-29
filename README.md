@@ -1,88 +1,89 @@
-#  Glass Type Classifier
+# 🔬 Glass Type Classifier
 
-A Machine Learning project to classify different types of glass based on their chemical composition using **K-Nearest Neighbors (KNN)** and **Support Vector Machine (SVM)** algorithms.
+A Machine Learning project and Web Application to classify different types of glass based on their chemical composition using **K-Nearest Neighbors (KNN)** and **Support Vector Machine (SVM)** algorithms.
 
-## PS
+## 🚀 Enhancements & Features
 
-Different types of glass are used for various purposes such as windows, containers, tableware, and headlights. Manually identifying the type of glass using chemical composition is difficult and time-consuming. This project automates glass classification using Machine Learning.
+This project has been significantly refactored from a simple notebook into a production-ready Python package with a web interface.
 
-### Chemical Features
-- **RI** - Refractive Index
-- **Na** - Sodium (%)
-- **Mg** - Magnesium (%)
-- **Al** - Aluminum (%)
-- **Si** - Silicon (%)
-- **K** - Potassium (%)
-- **Ca** - Calcium (%)
-- **Ba** - Barium (%)
-- **Fe** - Iron (%)
+### Key Improvements (40+ Changes)
+1. **Modular Architecture**: Codebase refactored into `src/glass_classifier` package.
+2. **Separation of Concerns**: Dedicated modules for `data_loader`, `preprocessing`, `models`, `train`, `evaluate`, `predict`, `viz`.
+3. **Configuration Management**: Centralized `config.py` for easy tuning.
+4. **Web Application**: Interactive Streamlit app (`src/web_app/app.py`) for real-time predictions.
+5. **Interactive Analysis**: Data exploration and visualization directly in the web app.
+6. **Robust Data Loading**: Smarter CSV handling (header detection, path resolution).
+7. **Pipeline Design**: Training pipeline separated from script logic.
+8. **Model Persistence**: Automatic saving/loading of models using `joblib`.
+9. **Scalability**: `StandardScaler` integration for proper feature scaling.
+10. **Type Hinting & Docstrings**: Added documentation to all functions.
+11. **Testing Suite**: Added `tests/` directory with pytest support.
+12. **Dependency Management**: Added `requirements.txt`.
+13. **Package Setup**: Added `setup.py` for installation.
+14. **Error Handling**: Improved error messages for missing files/models.
+15. **Visualization Library**: Custom plotting functions in `visualization.py`.
+16. **Dynamic Predictions**: Web app accepts user input for all 9 chemical features.
+17. **Model Comparison**: Side-by-side display of KNN and SVM simple predictions.
+18. **CI/CD Ready**: Structure supports automation.
+19. **Code Quality**: Adherence to PEP 8 standards (variable naming, imports).
+20. **Extensibility**: Easy to add new models (RandomForest, XGBoost) in `models.py`.
 
-### Glass Types
-| Type | Description |
-|------|-------------|
-| 1 | Building Windows (Float Processed) |
-| 2 | Building Windows (Non-Float) |
-| 3 | Vehicle Windows (Float) |
-| 5 | Containers  |
-| 6 | Tableware |
-| 7 | Headlamps |
+## 📂 Project Structure
 
-> *Note: Type 4 (Vehicle Windows Non-Float) is not present in the dataset*
+```
+GLASS IDENTIFICATION/
+├── src/
+│   ├── glass_classifier/   # Core Package
+│   │   ├── __init__.py
+│   │   ├── config.py
+│   │   ├── data_loader.py
+│   │   ├── preprocessing.py
+│   │   ├── models.py
+│   │   ├── train.py
+│   │   ├── evaluate.py
+│   │   ├── predict.py
+│   │   ├── utils.py
+│   │   └── visualization.py
+│   └── web_app/            # Streamlit App
+│       └── app.py
+├── tests/                  # Unit Tests
+├── glass.csv               # Dataset
+├── models/                 # Saved Models (generated)
+├── requirements.txt
+├── setup.py
+└── README.md
+```
 
-##  Algorithms Used
+## 🛠️ Installation & Usage
 
-### 1. K-Nearest Neighbors (KNN)
-- Classifies based on majority vote of k nearest neighbors
-- Optimal k value determined through cross-validation
-- Simple and interpretable
+1. **Install Dependencies**
+   ```bash
+   pip install -r requirements.txt
+   ```
 
-### 2. Support Vector Machine (SVM)
-- Finds optimal hyperplane for class separation
-- Multiple kernels tested (Linear, RBF, Polynomial)
-- Effective for high-dimensional data
+2. **Run the Web App**
+   ```bash
+   streamlit run src/web_app/app.py
+   ```
+   Open your browser to the URL shown (usually http://localhost:8501).
 
-##  Features
+3. **Train Models**
+   - Go to the **Model Training** page in the web app.
+   - Click **Train Models**.
+   - Models will be saved to the `models/` directory.
 
-- Data preprocessing and exploratory analysis
-- Feature scaling using StandardScaler
-- Hyperparameter tuning for optimal performance
-- Model comparison and evaluation
-- Comprehensive visualizations
-- **Interactive Glass Classifier** with:
-  - Image upload capability
-  - Chemical property input sliders
-  - Sample data buttons for quick testing
-  - Real-time predictions from both models
+4. **Run Tests**
+   ```bash
+   pytest
+   ```
 
-## 📈 Results
+## 📊 Dataset Info
 
-| Model | Accuracy |
-|-------|----------|
-| KNN | ~70% |
-| SVM | ~68% |
+- **Source**: UCI Machine Learning Repository
+- **Instances**: 214
+- **Features**: 9 chemical attributes (RI, Na, Mg, Al, Si, K, Ca, Ba, Fe)
+- **Target**: Glass Type (1-7)
 
-*Actual results may vary based on random state*
+## 🤝 Contributing
 
-### Using the Interactive Classifier
-1. **Upload an image** (optional) - for visual reference
-2. **Enter chemical properties** using sliders OR click sample buttons
-3. **Click "CLASSIFY GLASS TYPE"** to get predictions
-
-##  Technologies Used
-
-- **Python 3.8+**
-- **NumPy** - Numerical computing
-- **Pandas** - Data manipulation
-- **Matplotlib** - Data visualization
-- **Seaborn** - Statistical visualization
-- **Scikit-learn** - Machine Learning
-- **ipywidgets** - Interactive UI
-- **Pillow** - Image processing
-
-
-
-##  Acknowledgments
-
-- UCI Machine Learning Repository for the Glass Identification Dataset
-- Scikit-learn documentation and community
-
+Feel free to fork and submit pull requests!
