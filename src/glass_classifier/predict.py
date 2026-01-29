@@ -10,11 +10,13 @@ def load_models():
         svm = joblib.load(os.path.join(config.MODEL_DIR, 'svm_model.pkl'))
         rf = joblib.load(os.path.join(config.MODEL_DIR, 'rf_model.pkl'))
         gb = joblib.load(os.path.join(config.MODEL_DIR, 'gb_model.pkl'))
+        lr = joblib.load(os.path.join(config.MODEL_DIR, 'lr_model.pkl'))
         scaler = joblib.load(os.path.join(config.MODEL_DIR, 'scaler.pkl'))
-        return knn, svm, rf, gb, scaler
+        return knn, svm, rf, gb, lr, scaler
     except FileNotFoundError:
         print("Models not found. Please train first.")
-        return None, None, None, None, None
+        return None, None, None, None, None, None
+
 
 
 def predict_sample(models_dict, sample_data):
@@ -35,11 +37,14 @@ def predict_sample(models_dict, sample_data):
     svm_pred = models_dict['svm'].predict(sample_scaled)[0]
     rf_pred = models_dict['rf'].predict(sample_scaled)[0]
     gb_pred = models_dict['gb'].predict(sample_scaled)[0]
+    lr_pred = models_dict['lr'].predict(sample_scaled)[0]
     
     return {
         'KNN': int(knn_pred),
         'SVM': int(svm_pred),
         'Random Forest': int(rf_pred),
-        'Gradient Boosting': int(gb_pred)
+        'Gradient Boosting': int(gb_pred),
+        'Logistic Regression': int(lr_pred)
     }
+
 
