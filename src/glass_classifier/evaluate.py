@@ -1,4 +1,8 @@
 from sklearn.metrics import accuracy_score, classification_report, confusion_matrix
+from sklearn.model_selection import cross_val_score
+import json
+import os
+
 
 def evaluate_model(model, X_test_scaled, y_test, model_name="Model"):
     """
@@ -27,3 +31,24 @@ def evaluate_model(model, X_test_scaled, y_test, model_name="Model"):
         'report': report,
         'confusion_matrix': cm
     }
+
+def save_metrics_to_json(metrics, filepath):
+    """Save metrics to a JSON file."""
+    # Convert numpy types to native types for JSON serialization
+    serialized = {}
+    for k, v in metrics.items():
+        if k == 'confusion_matrix':
+            serialized[k] = v.tolist()
+        else:
+            serialized[k] = v
+            
+    with open(filepath, 'w') as f:
+        json.dump(serialized, f, indent=4)
+
+def cross_validate_model(model, X, y, cv=5):
+    """Perform cross-validation."""
+    scores = cross_val_score(model, X, y, cv=cv)
+    print(f"CV Scores: {scores}")
+    print(f"Mean CV Score: {scores.mean():.4f}")
+    return scores.mean()
+
